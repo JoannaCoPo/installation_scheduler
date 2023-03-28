@@ -15,4 +15,3 @@ class Employee
     status[1] == :non_pto ? true : false
   end
 end
-{foo: 0, bar: 1, baz: 2}.find {|key, value| key.start_with?('b') }    

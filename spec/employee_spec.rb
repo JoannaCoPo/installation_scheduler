@@ -25,8 +25,8 @@ RSpec.describe Employee do
   describe '#available?' do
     it 'returns employee availability per day' do
       # day = Day.new('Tuesday') 
-      tuesday = :tuesday
-      expect(@employee.available?(@weekly_availability, tuesday)).to eq(true)
+      expect(@employee.available?(@weekly_availability, :tuesday)).to eq(true)
+      expect(@employee.available?(@weekly_availability, :wednesday)).to eq(false)
     end
   end
 end
