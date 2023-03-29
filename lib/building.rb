@@ -29,10 +29,10 @@ class Building
 
   def commercial
     {
-      required: {
-        1: [:certified,pending_certification],
-        2: [:certified,pending_certification]
-      }
+      requirements: {
+        1 => [:certified, :pending_certification],
+        2 => [:certified, :pending_certification]
+      },
       four_of_any: [
         :certified, 
         :pending_certification, 

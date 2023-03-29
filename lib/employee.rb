@@ -9,8 +9,6 @@ class Employee
   end
 
   def available?(day)
-    # status = nil
-    # weekly_availability.each {|key, value| status = value if day == key}
     status = weekly_availability.find {|k, v| k.to_s == day }
     status[1] == :non_pto ? true : false
   end
