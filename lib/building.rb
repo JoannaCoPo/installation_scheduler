@@ -1,61 +1,46 @@
 require 'pry'
 class Building
-  attr_reader :type, :requirements
+  attr_reader :type, 
+              :requirements,
+              :day, 
+              :assigned_employees
               
-  def initialize(type)
+  def initialize(type, day)
     @type = type
     @requirements = buidling_requirements
-    # @assigned_employees = []
+    @day = day
+    @assigned_employees = []
   end
 
   def buidling_requirements
     requirements = type_conditions
   end
 
-  # def assign(employee)
-  #   # if sometthing...
-  #   @assigned_employees << emloyee
-  # end
-
-  def check_employee_compatibility
-    if type == :single_story
-      return  [1]
-    elsif type == :two_story
-      return [1, 2]
-    else #any reason to have a more explicit elsif here?
-      return [1, 2, 3, 4, 5, 6, 7, 8]
-    end
-  end
-
-  def required_number_of_employees
-    if type == :single_story
-      return  [1]
-    elsif type == :two_story
-      return [1, 2]
-    else #any reason to have a more explicit elsif here?
-      return [1, 2, 3, 4, 5, 6, 7, 8]
-    end
-  end
-
-  # if time, maybe reconsider data type for buidling types (hash..)
   def single_story_home
-    ["certified_installer"]
+    [:certified]
   end
 
   def two_story_home
-    pending_cert_or_laborer = "pending certified installer" || "laborer"
-    ["certified installer", "#{pending_cert_or_laborer}"]
+    {
+      required: [:certified],
+      one_of: [:pending_certification, :laborer]
+    }
   end
 
-  def commercial_building
-    any_worker = "certified installer" || "pending certified installer" || "laborer"
-    [
-      "certified installer",
-      "certified installer",
-      "pending certified installer",
-      "pending certified installer", 
-      "#{any_worker}"
-    ]
+  def commercial
+    {
+      required: {
+        1: [:certified,pending_certification],
+        2: [:certified,pending_certification]
+      }
+      four_of_any: [
+        :certified, 
+        :pending_certification, 
+        :laborer, 
+        :certified 
+      ]
+      # improve if time
+    }
   end
 
   private
@@ -65,7 +50,7 @@ class Building
     elsif type == :two_story
       return two_story_home
     else
-      return commercial_building
+      return commercial
     end
   end
 end
