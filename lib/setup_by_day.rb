@@ -17,38 +17,46 @@ class SetupByDay
   end
 
   def check_building_requirements(building, available_employees)
-    #single_story
-    if (building.requirements.class != Hash) && (building.assigned_employees.count < 1) # fix this
+    # single_story, 1 certified
+    if building.requirements.class != Hash 
       building.requirements.each do |position|
         available_employees.each do |emp|
           if emp.type == position
-            building.assigned_employees << emp
-            available_employees.delete(emp)
+            if building.assigned_employees.empty?
+              building.assigned_employees << emp
+              available_employees.delete(emp)
+            end
           end
         end
       end
     end
 
-    # two_story
+    # two_story, 1 certified
     if (building.requirements.class == Hash) && (building.requirements.has_key?(:required))
       building.requirements[:required].each do |req|
         available_employees.any? do|emp| 
           if emp.type == req
-            building.assigned_employees << emp
-            available_employees.delete(emp)
+            if building.assigned_employees.empty?
+              building.assigned_employees << emp
+              available_employees.delete(emp)
+            end
           end 
         end
       end
     end
 
-    # commericial 
+    # commericial, 2 certified and 2 pending cert 
     if (building.requirements.class == Hash) && (building.requirements.has_key?(:requirements))
-      building.requirements[:requirements].each do |req|
-        available_employees.any? do|emp| 
-          if emp.type == req
-            building.assigned_employees << emp
-            available_employees.delete(emp)
-          end 
+      building.requirements[:requirements].each do |key, req_array|
+        req_array.each do |req|
+          available_employees.any? do|emp| 
+            if emp.type == req
+              if building.assigned_employees.count < 4
+                building.assigned_employees << emp
+                available_employees.delete(emp)
+              end
+            end 
+          end
         end
       end
     end
