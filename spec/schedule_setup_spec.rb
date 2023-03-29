@@ -1,5 +1,5 @@
 require "./spec/support/employee_helpers"
-require "./lib/setup_by_day"
+require "./lib/schedule_setup"
 require "./lib/building"
 require "./lib/employee"
 require 'pry'
@@ -8,7 +8,7 @@ RSpec.configure do |c|
   c.include EmployeeHelpers
 end
 
-RSpec.describe SetupByDay do
+RSpec.describe ScheduleSetup do
   monday = Building.new(:single_story, 'monday')
   tuesday = Building.new(:two_story, 'tuesday')
   wednesday = Building.new(:commericial, 'wednesday')
@@ -19,7 +19,7 @@ RSpec.describe SetupByDay do
     
   #check_strict_building_requirements
   xit 'returns the strict buidling requirements' do
-    setup = SetupByDay.new
+    setup = ScheduleSetup.new
       
     expect(monday.assigned_employees.count).to eq(0)
     expect(tuesday.assigned_employees.count).to eq(0)
@@ -35,7 +35,7 @@ RSpec.describe SetupByDay do
 
   #check_flexible_building_requirements
   it 'returns the strict buidling requirements' do
-    setup = SetupByDay.new
+    setup = ScheduleSetup.new
       
     expect(monday.assigned_employees.count).to eq(0)
     expect(tuesday.assigned_employees.count).to eq(0)
@@ -48,8 +48,9 @@ RSpec.describe SetupByDay do
     expect(wednesday.assigned_employees.count).to eq(8)
   end
 
+  #results
   it 'returns the strict buidling requirements' do
-    setup = SetupByDay.new
+    setup = ScheduleSetup.new
     expect(setup.results).to eq({})
     
     setup.schedule(buildings, employee_pool_sample)

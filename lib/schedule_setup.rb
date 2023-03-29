@@ -1,4 +1,4 @@
-class SetupByDay
+class ScheduleSetup
   attr_reader :results
               
   def initialize
