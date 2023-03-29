@@ -9,43 +9,55 @@ RSpec.configure do |c|
 end
 
 RSpec.describe SetupByDay do
-  describe '#initialize' do
-    single_story = Building.new(:single_story)
+  monday = Building.new(:single_story, 'monday')
+  tuesday = Building.new(:two_story, 'tuesday')
+  wednesday = Building.new(:commericial, 'wednesday')
+  thursday = Building.new(:single_story, 'thursday')
+  friday = Building.new(:two_story, 'friday')
+  buildings = [monday, tuesday, wednesday, thursday, friday]
+    
+    
+  #check_strict_building_requirements
+  xit 'returns the strict buidling requirements' do
+    setup = SetupByDay.new
+      
+    expect(monday.assigned_employees.count).to eq(0)
+    expect(tuesday.assigned_employees.count).to eq(0)
+    expect(wednesday.assigned_employees.count).to eq(0)
 
-    it 'returns which day' do
-      setup = SetupByDay.new('monday', single_story, employee_pool_sample)
-      expect(setup.day).to eq('monday')
-    end
+    # would need to test specific helper method vs #schedule
+    setup.schedule(buildings, employee_pool_sample)
 
-    it 'returns the assigned builing type for the day' do
-      setup = SetupByDay.new('monday', single_story, employee_pool_sample)
-      expect(setup.buidling).to eq(single_story)
-    end
-
-    it 'has access to all employees' do
-      setup = SetupByDay.new('monday', single_story, employee_pool_sample)
-      # employee_pool_sample has randomized values for employee availability
-      expect(setup.employee_pool.count).to eq(10)
-    end
+    expect(monday.assigned_employees.count).to eq(1)
+    expect(tuesday.assigned_employees.count).to eq(1)
+    expect(wednesday.assigned_employees.count).to eq(4)
   end
 
-  describe '#check_employee_availability?' do
-    two_story = Building.new(:two_story)
-    # first to narrow down options
-    xit 'removes unavaiable employees from pool' do
-      setup = SetupByDay.new('monday', two_story, employee_pool_sample) 
-      expect(setup.filter_by_availability).to eq(true)
-    end
+  #check_flexible_building_requirements
+  it 'returns the strict buidling requirements' do
+    setup = SetupByDay.new
+      
+    expect(monday.assigned_employees.count).to eq(0)
+    expect(tuesday.assigned_employees.count).to eq(0)
+    expect(wednesday.assigned_employees.count).to eq(0)
+
+    setup.schedule(buildings, employee_pool_sample)
+
+    expect(monday.assigned_employees.count).to eq(1)
+    expect(tuesday.assigned_employees.count).to eq(2)
+    expect(wednesday.assigned_employees.count).to eq(8)
   end
 
-  describe '#check_buidling_requirements?' do
-    two_story = Building.new(:two_story)
-    it 'returns employee availability per day' do
-      setup = SetupByDay.new('monday', two_story, employee_pool_sample)  
-      expect(setup.check_two_story_compatibility).to eq(true)
-    end
+  it 'returns the strict buidling requirements' do
+    setup = SetupByDay.new
+    expect(setup.results).to eq({})
+    
+    setup.schedule(buildings, employee_pool_sample)
+    
+    expect(setup.results.class).to eq(Hash)
+    expect(setup.results[:week].size).to eq(5)
   end
 end
 
 # would be neat to add error or alert if there are not enough 
-# empployees for a given day
+# compatible employees for a given day/building
