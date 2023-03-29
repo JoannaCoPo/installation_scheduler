@@ -1,4 +1,3 @@
-require 'pry'
 class Building
   attr_reader :type, 
               :requirements,

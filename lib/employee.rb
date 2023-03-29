@@ -1,4 +1,3 @@
-require 'pry'
 class Employee
   attr_reader :type,
               :weekly_availability
